@@ -19,7 +19,7 @@ type ValidChains =
 
 export default function BatchMint() {
   const [providerAddr, setProviderAddr] = useState(
-    is_development ? process.env.NEXT_PUBLIC_GOERLI_PROVIDER : ""
+    is_development ? (process.env.NEXT_PUBLIC_GOERLI_PROVIDER as string) : ""
   );
   let provider = providerAddr
     ? new Web3.providers.HttpProvider(providerAddr)
@@ -120,9 +120,14 @@ export default function BatchMint() {
 
           const signedTx = await web3.eth.accounts.signTransaction(tx, key);
 
-          const txSend = await web3.eth.sendSignedTransaction(
-            signedTx.rawTransaction
-          );
+          let txSend;
+          if (signedTx.rawTransaction !== undefined) {
+            txSend = await web3.eth.sendSignedTransaction(
+              signedTx.rawTransaction
+            );
+          } else {
+            throw new Error();
+          }
 
           console.log({ txSend });
         } catch (err) {
