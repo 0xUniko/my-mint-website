@@ -9,14 +9,6 @@ declare global {
   }
 }
 
-type ValidChains =
-  | "goerli"
-  | "kovan"
-  | "mainnet"
-  | "rinkeby"
-  | "ropsten"
-  | "sepolia";
-
 export default function BatchMint() {
   const [providerAddr, setProviderAddr] = useState(
     is_development ? (process.env.NEXT_PUBLIC_GOERLI_PROVIDER as string) : ""
@@ -107,7 +99,6 @@ export default function BatchMint() {
           const nonce = await web3.eth.getTransactionCount(acct);
           const tx = {
             type: 2,
-            chain: "mainnet" as ValidChains,
             from: acct,
             to: nftAddr,
             value: inputEthValue,
@@ -131,6 +122,8 @@ export default function BatchMint() {
 
           console.log({ txSend });
         } catch (err) {
+          console.log({ err });
+
           alert(`error orcurs on account ${acct}`);
         }
       }
