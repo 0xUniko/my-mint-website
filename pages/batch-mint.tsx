@@ -90,6 +90,10 @@ export default function BatchMint() {
   );
 
   const mint = async () => {
+    const { maxFeePerGas, maxPriorityFeePerGas } = await (
+      await fetch("/api/gas")
+    ).json();
+
     if (web3) {
       const data = txData.replace(/^0x/, "");
 
@@ -104,6 +108,14 @@ export default function BatchMint() {
             value: inputEthValue,
             nonce,
             gas: 100000,
+            maxFeePerGas: web3.utils.toWei(
+              (maxFeePerGas + 0.1).toString(),
+              "gwei"
+            ),
+            maxPriorityFeePerGas: web3.utils.toWei(
+              (maxPriorityFeePerGas + 0.1).toString(),
+              "gwei"
+            ),
             data,
           };
 
